@@ -18,11 +18,11 @@ node{
                                  docker push docker.io/aadireddy/devcenter:$BUILD_NUMBER'''
     }
     stage('update image version'){
-        sh label: '', script: '''sed -i s/latest/$BUILD_NUMBER/ devcenter-deploy.yml'''    
+        sh label: '', script: '''sed -i s/latest/$BUILD_NUMBER/ kubernetes-deploy.yaml'''    
     }
     stage('deploy to kubernetes'){
         kubernetesDeploy(
-        configs: 'devcenter-deploy.yml',
+        configs: 'kubernetes-deploy.yaml',
         kubeconfigId: 'k8s_config',
         enableConfigSubstitution: true
         )
