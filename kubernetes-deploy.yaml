@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-tomcat-maven-example-deployment
+  labels:
+    app: java-tomcat-maven-example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-tomcat-maven-example
+  template:
+    metadata:
+      labels:
+        app: java-tomcat-maven-example
+    spec:
+      containers:
+      - name: java-tomcat-maven-example
+        image: docker.io/aadireddy/java-tomcat-maven-example:latest
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-tomcat-maven-example-service
+spec:
+  selector:
+    app: java-tomcat-maven-example
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 30008
