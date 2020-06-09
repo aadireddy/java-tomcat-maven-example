@@ -15,7 +15,7 @@ node{
     }
     stage('push docker image'){
         sh label: '', script: '''docker tag aadireddy/java-tomcat-maven-example:$BUILD_NUMBER docker.io/aadireddy/java-tomcat-maven-example:$BUILD_NUMBER
-                                 docker push docker.io/aadireddy/devcenter:$BUILD_NUMBER'''
+                                 docker push docker.io/aadireddy/java-tomcat-maven-example:$BUILD_NUMBER'''
     }
     stage('update image version'){
         sh label: '', script: '''sed -i s/latest/$BUILD_NUMBER/ kubernetes-deploy.yaml'''    
