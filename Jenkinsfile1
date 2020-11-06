@@ -7,4 +7,13 @@ node{
         def mvnCMD = "${mvnHome}/bin/mvn"
         sh "${mvnCMD} clean package"
     }
+    stage('Build Docker Image'){
+        sh 'docker build -t aadireddy/pipe-1:$BUILD_NUMBER .'
+    }  
+    stage('Push Docker Image'){
+        withCredentials([string(credentialsId: 'docker-hub', variable: 'dockerhubpwd')]) {
+        sh "docker login -u aadireddy -p ${dockerhubpwd}"
+        }
+        sh 'docker push aadireddy/pipe-1:$BUILD_NUMBER'
+    }
     }
