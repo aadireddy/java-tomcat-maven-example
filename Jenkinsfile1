@@ -1,0 +1,10 @@
+node{
+    stage('scm checkout'){
+       git 'https://github.com/aadireddy/game-of-life.git'
+    }
+    stage('build'){
+        def mvnHome = tool name: 'maven', type: 'maven'
+        def mvnCMD = "${mvnHome}/bin/mvn"
+        sh "${mvnCMD} clean package"
+    }
+    }
