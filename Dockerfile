@@ -1,6 +1,4 @@
-FROM tomcat
-
-ARG CONT_IMG_VER
-WORKDIR /usr/local/tomcat
+FROM openjdk:8
 EXPOSE 8080
-COPY ./target/java-tomcat-maven-example.war /usr/local/tomcat/webapps
+ADD target/webapp-runner.jar webapp-runner.jar
+ENTRYPOINT ["java","-jar","webapp-runner.jar']
