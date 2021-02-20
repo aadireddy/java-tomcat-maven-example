@@ -1,19 +1,36 @@
-node{
-    stage('scm checkout'){
-       git 'https://github.com/aadireddy/java-tomcat-maven-example.git'
+pipeline{
+  agent any
+    tools{
+    maven 'maven' 
     }
-    stage('build'){
-        def mvnHome = tool name: 'maven', type: 'maven'
-        def mvnCMD = "${mvnHome}/bin/mvn"
-        sh "${mvnCMD} clean package"
-    }
-    stage('Build Docker Image'){
-        sh 'docker build -t aadireddy/pipe-1:$BUILD_NUMBER .'
-    }  
-    stage('Push Docker Image'){
-        withCredentials([string(credentialsId: 'docker-hub', variable: 'dockerhubpwd')]) {
-        sh "docker login -u aadireddy -p ${dockerhubpwd}"
+    stages{
+      stage('SCM'){
+        steps{
+          git 'https://github.com/aadireddy/java-tomcat-maven-example.git'
         }
-        sh 'docker push aadireddy/pipe-1:$BUILD_NUMBER'
-    }
-    }
+      } 
+      stage('build'){      
+        steps{
+          sh "mvn clean package"
+        }  
+       }
+       stage(imagebuild){
+         steps{
+          sh "docker build . -t javatomcat:$BUILD_NUMBER"
+         }
+       }
+       stage(imagetag){
+           steps{
+               sh "docker tag javatomcat:$BUILD_NUMBER 13.127.117.244:8085/javatomcat:$BUILD_NUMBER"
+           }
+       }
+       stage(pushimage){
+         steps{
+          withCredentials([usernamePassword(credentialsId: 'NEXUS_NEW', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USER')]) {
+            sh "docker login -u ${NEXUS_USER} -p ${NEXUS_PASSWORD} 13.127.117.244:8085"
+          }
+            sh "docker push 13.127.117.244:8085/javatomcat:$BUILD_NUMBER"
+       }
+       }
+       }
+  }
