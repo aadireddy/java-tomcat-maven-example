@@ -3,7 +3,7 @@ pipeline{
   stages{
     stage('git clone'){
      steps{
-	  git 'https://github.com/nishanthchowdary/Demo.git'
+	  git 'https://github.com/nishanthchowdary/java-tomcat-maven-example.git'
 	 }
     }
     stage('build'){
