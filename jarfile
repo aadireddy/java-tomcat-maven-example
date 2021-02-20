@@ -1,0 +1,18 @@
+pipeline{
+ agent any
+  stages{
+    stage('git clone'){
+     steps{
+	  git 'https://github.com/nishanthchowdary/Demo.git'
+	 }
+    }
+    stage('build'){
+	 tools{
+	  maven 'maven'
+	 }
+	 steps{
+	 sh 'mvn clean package'
+	 }
+	} 
+  }
+}
