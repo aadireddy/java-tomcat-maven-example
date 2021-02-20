@@ -27,7 +27,7 @@ pipeline{
        stage(pushimage){
          steps{
           withCredentials([usernamePassword(credentialsId: '1111', passwordVariable: 'docker123', usernameVariable: 'docker')]) {
-            sh "docker login -u ${NEXUS_USER} -p ${NEXUS_PASSWORD} 13.127.117.244:8086"
+            sh "docker login -u ${docker} -p ${docker123} 13.127.117.244:8086"
           }
             sh "docker push 13.127.117.244:8086/java:$BUILD_NUMBER"
        }
