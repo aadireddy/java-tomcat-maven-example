@@ -21,7 +21,7 @@ pipeline{
        }
        stage(imagetag){
            steps{
-               sh "docker tag javatomcat:$BUILD_NUMBER 13.233.3.57:8085/jt:$BUILD_NUMBER"
+               sh "docker tag jt:$BUILD_NUMBER 13.233.3.57:8085/jt:$BUILD_NUMBER"
            }
        }
        stage(pushimage){
