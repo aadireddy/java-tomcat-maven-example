@@ -21,7 +21,7 @@ pipeline{
        }
        stage(imagetag){
            steps{
-               sh "docker tag java:$BUILD_NUMBER 13.127.117.244:8086/java:$BUILD_NUMBER"
+               sh "docker tag java:$BUILD_NUMBER 13.233.3.57:8086/java:$BUILD_NUMBER"
            }
        }
        stage(pushimage){
