@@ -16,12 +16,12 @@ pipeline{
        }
        stage(imagebuild){
          steps{
-          sh "docker build . -t JT:$BUILD_NUMBER"
+          sh "docker build . -t jt:$BUILD_NUMBER"
          }
        }
        stage(imagetag){
            steps{
-               sh "docker tag javatomcat:$BUILD_NUMBER 13.233.3.57:8085/JT:$BUILD_NUMBER"
+               sh "docker tag javatomcat:$BUILD_NUMBER 13.233.3.57:8085/jt:$BUILD_NUMBER"
            }
        }
        stage(pushimage){
@@ -29,7 +29,7 @@ pipeline{
           withCredentials([usernamePassword(credentialsId: 'NEXUS_NEW', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USER')]) {
             sh "docker login -u ${NEXUS_USER} -p ${NEXUS_PASSWORD} 13.233.3.57:8085"
           }
-            sh "docker push 13.233.3.57:8085/JT:$BUILD_NUMBER"
+            sh "docker push 13.233.3.57:8085/jt:$BUILD_NUMBER"
        }
        }
        }
