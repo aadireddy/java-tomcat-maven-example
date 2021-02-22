@@ -1,0 +1,24 @@
+---
+- hosts: webserver
+  become: true
+  tasks:
+  - name: copy files
+    copy:
+      dest: /home/ansible/
+      src: /home/ansible/scripts/docker.sh
+
+  - name: install docker
+    command: sudo sh /home/ansible/docker.sh
+
+  - name: Copy daemon.json to docker
+    copy:
+      dest: /etc/docker/
+      src: /home/ansible/daemon.json
+  - name: Restart Docker
+    command: sudo systemctl restart docker
+
+  - name: Docker Login
+    command: sudo docker login -u {user} -p {passwd} <repoID>:<port>
+
+  - name: Pull Image from Docker Private Repositary
+    command: sudo docker pull <repoID>:<port>/image:v
