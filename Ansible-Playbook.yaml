@@ -18,7 +18,10 @@
     command: sudo systemctl restart docker
 
   - name: Docker Login
-    command: sudo docker login -u {user} -p {passwd} <repoID>:<port>
+    command: sudo docker login -u admin -p admin123 65.0.168.243:8085
 
   - name: Pull Image from Docker Private Repositary
-    command: sudo docker pull <repoID>:<port>/image:v
+    command: sudo docker pull 65.0.168.243:8085/jt:v1.0
+    
+  - name: Run a container
+    command: sudo docker run -p 8080:8080 -d -name java-tomcat 65.0.168.243:8085/jt:v1.0 
