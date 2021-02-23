@@ -36,7 +36,7 @@ agent any
        steps{
          CMD: 'ansible-playbook Ansible-Playbook.yaml'
            sshagent(['ANSIBLE']) {
-             sh 'ssh -o StrictHostKeyChecking=no ansible@172.31.13.42 ${CMD}
+             sh 'ssh -o StrictHostKeyChecking: no ansible@172.31.13.42 ${CMD}
            }
        }
        }
