@@ -26,7 +26,7 @@ agent any
      }
      stage(pushimage){
        steps{
-        withCredentials([usernamePassword(credentialsId: 'NEXUS_NEW', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USER')]) {
+        withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWD', usernameVariable: 'NEXUS_USER')]) {
           sh "docker login -u ${NEXUS_USER} -p ${NEXUS_PASSWORD} 65.0.168.243:8085"
         }
           sh "docker push 65.0.168.243:8085/jt:v1.0"
