@@ -1,36 +1,43 @@
 pipeline{
-  agent any
-    tools{
-    maven 'maven' 
-    }
-    stages{
-      stage('SCM'){
-        steps{
-          git 'https://github.com/aadireddy/java-tomcat-maven-example.git'
-        }
-      } 
-      stage('build'){      
-        steps{
-          sh "mvn clean package"
-        }  
+agent any
+  tools{
+  maven 'maven' 
+  }
+  stages{
+    stage('SCM'){
+      steps{
+        git 'https://github.com/aadireddy/java-tomcat-maven-example.git'
+      }
+    } 
+    stage('build'){      
+      steps{
+        sh "mvn clean package"
+      }  
+     }
+     stage(imagebuild){
+       steps{
+        sh "docker build . -t jt:$BUILD_NUMBER"
        }
-       stage(imagebuild){
+     }
+     stage(imagetag){
          steps{
-          sh "docker build . -t jt:$BUILD_NUMBER"
+             sh "docker tag jt:v1.0 65.0.168.243:8085/jt:v1.0"
          }
-       }
-       stage(imagetag){
-           steps{
-               sh "docker tag jt:$BUILD_NUMBER 13.233.3.57:8085/jt:$BUILD_NUMBER"
+     }
+     stage(pushimage){
+       steps{
+        withCredentials([usernamePassword(credentialsId: 'NEXUS_NEW', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USER')]) {
+          sh "docker login -u ${NEXUS_USER} -p ${NEXUS_PASSWORD} 65.0.168.243:8085"
+        }
+          sh "docker push 65.0.168.243:8085/jt:v1.0"
+     }
+     }
+     stage(Run a container){
+       steps{
+         CMD=`ansible-playbook Ansible-Playbook.yaml`
+           sshagent(['ANSIBLE']) {
+             sh 'ssh -o StrictHostKeyChecking=no ansible@172.31.13.42 ${CMD}
            }
-       }
-       stage(pushimage){
-         steps{
-          withCredentials([usernamePassword(credentialsId: 'NEXUS_NEW', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USER')]) {
-            sh "docker login -u ${NEXUS_USER} -p ${NEXUS_PASSWORD} 13.233.3.57:8085"
-          }
-            sh "docker push 13.233.3.57:8085/jt:$BUILD_NUMBER"
-       }
        }
        }
   }
