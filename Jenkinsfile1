@@ -34,8 +34,10 @@ agent any
      }
      stage('Run-a-container'){
        steps{
-             sh label: '', script: 'ansible-playbook Ansible-Playbook.yaml'
+         sshagent(['ANSIBLE']) {
+           sh "ansible-playbook Ansible-Playbook.yaml ansible@172.31.13.42"
+         }
        }
-       }
+      }
   }
   }
