@@ -32,7 +32,7 @@ agent any
           sh "docker push 65.0.168.243:8085/jt:v1.0"
      }
      }
-     stage(Run-a-container){
+     stage('Run-a-container'){
        steps{
          CMD: 'ansible-playbook Ansible-Playbook.yaml'
            sshagent(['ANSIBLE']) {
