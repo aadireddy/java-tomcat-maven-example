@@ -21,7 +21,7 @@ agent any
      }
      stage(imagetag){
          steps{
-             sh "docker tag jt:$BUILD_NUMBER 65.1.114.196:8085/jt:$BUILD_NUMBER"
+             sh "docker tag jt:BUILD_NUMBER 65.1.114.196:8085/jt:1.1.2"
          }
      }
      stage(pushimage){
@@ -29,8 +29,16 @@ agent any
         withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'nexus_pwd', usernameVariable: 'nexus_usr')]) {
            sh "docker login -u ${nexus_usr} -p ${nexus_pwd} 65.1.114.196:8085"
         }
-           sh "docker push 65.1.114.196:8085/jt:$BUILD_NUMBER"
+           sh "docker push 65.1.114.196:8085/jt:1.1.2"
      }
-     }
+    }
+    stage(RunContainer){
+       steps{
+         sh dockerRun='docker run -p 8080:8081 -d -name java-tom 65.1.114.196:8085/jt:1.1.2'
+           sshagent(['ANSIBLE']) {
+             sh 'ssh -o StrictHostKeyChecking=no ansible@13.232.27.35 ${dockerRun}'
+           }
+        }
+       }
   }
-  }
+}
