@@ -16,7 +16,7 @@ agent any
      }
      stage(imagebuild){
        steps{
-        sh "docker build . -t jt:$BUILD_NUMBER"
+        sh "docker build -t jt:$BUILD_NUMBER ."
        }
      }
      stage(imagetag){
