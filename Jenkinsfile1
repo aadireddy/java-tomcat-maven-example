@@ -27,7 +27,7 @@ agent any
      stage(pushimage){
        steps{
         withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'nexus_pwd', usernameVariable: 'nexus_usr')]) {
-           sh "docker login -u ${nexus_usr} -p ${nexus_pwd} 65.1.109.162:8085
+           sh "docker login -u ${nexus_usr} -p ${nexus_pwd} 65.1.109.162:8085"
         }
            sh "docker push 65.1.109.162:8085/jt:v1.0"
      }
