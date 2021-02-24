@@ -21,23 +21,16 @@ agent any
      }
      stage(imagetag){
          steps{
-             sh "docker tag jt:$BUILD_NUMBER 65.0.168.243:8085/jt:v1.0"
+             sh "docker tag jt:$BUILD_NUMBER 65.1.109.162:8085/jt:v1.0"
          }
      }
      stage(pushimage){
        steps{
-        withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWD', usernameVariable: 'NEXUS_USER')]) {
-          sh "docker login -u ${NEXUS_USER} -p ${NEXUS_PASSWORD} 65.0.168.243:8085"
+        withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'nexus_pwd', usernameVariable: 'nexus_usr')]) {
+           sh "docker login -u ${nexus_usr} -p ${nexus_pwd} 65.1.109.162:8085
         }
-          sh "docker push 65.0.168.243:8085/jt:v1.0"
+           sh "docker push 65.1.109.162:8085/jt:v1.0"
      }
      }
-     stage('Run-a-container'){
-       steps{
-         sshagent(['ANSIBLE']) {
-           sh "ansible-playbook Ansible-Playbook.yaml ansible@172.31.13.42"
-         }
-       }
-      }
   }
   }
