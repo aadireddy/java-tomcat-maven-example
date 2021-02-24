@@ -21,7 +21,7 @@ agent any
      }
      stage(imagetag){
          steps{
-             sh "docker tag jt:BUILD_NUMBER 65.1.114.196:8085/jt:1.1.2"
+             sh "docker tag jt:$BUILD_NUMBER 65.1.114.196:8085/jt:1.1.2"
          }
      }
      stage(pushimage){
