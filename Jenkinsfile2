@@ -11,7 +11,7 @@ agent any
     }
     stage('DeployImage'){
       steps{
-        ansiblePlaybook credentialsId: 'ANS-SSH', installation: 'ansible', inventory: 'hosts', playbook: 'deploy.yaml'
+        ansiblePlaybook credentialsId: 'ANS-SSH', installation: 'ansible', inventory: 'hosts', playbook: 'home/ansible/deploy.yaml'
       }
     }
   }
