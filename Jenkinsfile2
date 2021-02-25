@@ -1,0 +1,19 @@
+pipeline{
+agent any
+  tools{
+  maven 'maven'
+  }
+  stages{
+    stage('SCM'){
+      steps{
+        git 'https://github.com/aadireddy/java-tomcat-maven-example.git'
+      }
+    }
+    stage('DeployImage'){
+      steps{
+        ansiblePlaybook credentialsId: 'ANS-SSH', installation: 'ansible', inventory: 'hosts', playbook: 'deploy.yaml'
+      }
+    }
+  }
+}
+    
