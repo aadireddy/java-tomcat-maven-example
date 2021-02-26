@@ -1,19 +1,42 @@
-node{
-    stage('scm checkout'){
-       git 'https://github.com/aadireddy/java-tomcat-maven-example.git'
+pipeline{
+agent any
+  tools{
+  maven 'maven'
+  }
+  stages{
+    stage('SCM'){
+      steps{
+        git 'https://github.com/aadireddy/java-tomcat-maven-example.git'
+      }
     }
-    stage('build'){
-        def mvnHome = tool name: 'maven', type: 'maven'
-        def mvnCMD = "${mvnHome}/bin/mvn"
-        sh "${mvnCMD} clean package"
+    stage('Build'){
+      steps{
+        sh "mvn clean package"
+      }
     }
-    stage('Build Docker Image'){
-        sh 'docker build -t aadireddy/pipe-1:$BUILD_NUMBER .'
-    }  
-    stage('Push Docker Image'){
-        withCredentials([string(credentialsId: 'docker-hub', variable: 'dockerhubpwd')]) {
-        sh "docker login -u aadireddy -p ${dockerhubpwd}"
+    stage('ImageBuild'){
+      steps{
+        sh "docker build . -t jtom:$BUILD_NUMBER"
+      }
+    }
+    stage('ImageTag'){
+      steps{
+        sh "docker tag jtom:$BUILD_NUMBER 13.232.5.36:8085/jtom:1.2"
+      }
+    }
+    stage('PushImage'){
+      steps{
+        withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'nexus_pwd', usernameVariable: 'nexus_usr')]) {
+          sh "docker login -u ${nexus_usr} -p ${nexus_pwd} 13.232.5.36:8085"
         }
-        sh 'docker push aadireddy/pipe-1:$BUILD_NUMBER'.
+        sh 'docker push aadireddy/pipe-1:$BUILD_NUMBER'
+          sh "docker push 13.232.5.36:8085/jtom:1.2 "
+      }
     }
+    stage('DeployImage'){
+      steps{
+        ansiblePlaybook credentialsId: 'ANS-SSH', installation: 'ansible', inventory: 'hosts', playbook: 'deploy.yaml'
+      }
     }
+  }
+}

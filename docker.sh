@@ -1,46 +1,27 @@
 #!/bin/bash
-
+=======
+#updating the server
 sudo yum update -y
 if [ $? -eq 0 ]; then
   echo "updated successfully"
-  sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-  if [ $? -eq 0 ]; then
-    echo "Repo added successfully"
-    sudo dnf install docker-ce docker-ce-cli containerd.io -y
+  #install docker and docker.registry 
+  sudo yum install docker docker.registry -y
+  sudo yum install docker -y
     if [ $? -eq 0 ]; then
-      docker version
-        if [ $? -eq 0 ]; then
-        echo "Docker Installed Successfully"
-        sudo systemctl enable docker
+      #add user to the group
+      sudo usermod -aG docker ansible
+      #enable the docker service
+      sudo systemctl enable docker
+      #give the execution permission to the docker.sock
+      sudo chmod 777 /var/run/docker.sock
+      if [ $? -eq 0 ]; then
         sudo systemctl start docker
-        sudo chmod 777 /var/run/sock
         if [ $? -eq 0 ]; then
-          echo "Docker is started"
+          echo "Docker is Installed and Started Successfully"
         else
           echo "Failed to start"
         fi
       fi
     fi
   fi
-fi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-fi
-fi
-fi
-fi
-fi
-fi
+       
