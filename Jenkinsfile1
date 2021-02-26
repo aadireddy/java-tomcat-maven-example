@@ -29,6 +29,7 @@ agent any
         withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'nexus_pwd', usernameVariable: 'nexus_usr')]) {
           sh "docker login -u ${nexus_usr} -p ${nexus_pwd} 13.232.5.36:8085"
         }
+        sh 'docker push aadireddy/pipe-1:$BUILD_NUMBER'
           sh "docker push 13.232.5.36:8085/jtom:1.2 "
       }
     }

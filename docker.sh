@@ -1,5 +1,5 @@
 #!/bin/bash
-
+=======
 #updating the server
 sudo yum update -y
 if [ $? -eq 0 ]; then
@@ -24,3 +24,4 @@ if [ $? -eq 0 ]; then
       fi
     fi
   fi
+       
