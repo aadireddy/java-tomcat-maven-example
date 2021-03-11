@@ -26,11 +26,9 @@ pipeline{
        }
        stage(pushimage){
          steps{
-          withCredentials([usernamePassword(credentialsId: '1111', passwordVariable: 'docker123', usernameVariable: 'docker')]) {
-            sh "docker login -u ${docker} -p ${docker123} 65.0.168.243:8086"
+             sh "aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 587164637456.dkr.ecr.us-west-2.amazonaws.com"
           }
             sh "docker push 587164637456.dkr.ecr.us-west-2.amazonaws.com/petstore:$BUILD_NUMBER"
        }
        }
-  }
 }
