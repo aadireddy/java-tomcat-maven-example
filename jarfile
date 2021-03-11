@@ -8,7 +8,7 @@ pipeline{
     }
     stage('build'){
 	 tools{
-	  maven 'maven'
+	  maven 'M3'
 	 }
 	 steps{
 	 sh 'mvn clean package'
@@ -16,12 +16,12 @@ pipeline{
 	}
       stage(imagebuild){
          steps{
-          sh "docker build . -t java:$BUILD_NUMBER"
+          sh "docker build . -t petstore:$BUILD_NUMBER"
          }
        }
        stage(imagetag){
            steps{
-               sh "docker tag java:$BUILD_NUMBER 65.0.168.243:8086/java:$BUILD_NUMBER"
+               sh "docker tag petstore:$BUILD_NUMBER 587164637456.dkr.ecr.us-west-2.amazonaws.com/petstore:$BUILD_NUMBER"
            }
        }
        stage(pushimage){
@@ -29,7 +29,7 @@ pipeline{
           withCredentials([usernamePassword(credentialsId: '1111', passwordVariable: 'docker123', usernameVariable: 'docker')]) {
             sh "docker login -u ${docker} -p ${docker123} 65.0.168.243:8086"
           }
-            sh "docker push 65.0.168.243:8086/java:$BUILD_NUMBER"
+            sh "docker push 587164637456.dkr.ecr.us-west-2.amazonaws.com/petstore:$BUILD_NUMBER"
        }
        }
   }
