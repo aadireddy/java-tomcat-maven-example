@@ -1,0 +1,26 @@
+pipeline{
+agent any
+  tools{
+  maven 'maven'
+  }
+  stages{
+    stage('SCM'){
+      steps{
+          echo " Hear cloneing the git hube repo"
+        git 'https://github.com/aadireddy/java-tomcat-maven-example.git'
+      }
+    }
+    stage('build'){
+      steps{
+       echo " build the war file"
+       sh "mvn clean package"
+      }
+    }
+    stage('Deploy'){
+      steps{
+        deploy adapters: [tomcat9(credentialsId: '7b3b95c8-2825-4b5a-aa9f-6441978beff5', path: '', url: 'http://3.80.217.61:8080/')], contextPath: 'war', war: '**/*.war'
+      }
+    }
+  }
+}
+    
